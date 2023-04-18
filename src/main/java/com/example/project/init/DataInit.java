@@ -36,7 +36,7 @@ public class DataInit implements ApplicationRunner {
 
             u2.setNickname("Sonya");
             int numberOfMeetings2 = 21;
-            u1.setNumberOfMeetings(numberOfMeetings2);
+            u2.setNumberOfMeetings(numberOfMeetings2);
 
 
             userDAO.save(u1);
