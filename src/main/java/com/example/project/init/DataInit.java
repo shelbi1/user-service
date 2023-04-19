@@ -1,9 +1,5 @@
 package com.example.project.init;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import com.example.project.dao.UserDAO;
 import com.example.project.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;

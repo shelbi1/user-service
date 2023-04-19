@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
+
 @Entity
 @Table(name = "USERS")
 public class User {
@@ -45,4 +46,5 @@ public class User {
     public void setNumberOfMeetings(int numberOfMeetings) {
         this.numberOfMeetings = numberOfMeetings;
     }
+
 }
