@@ -23,17 +23,14 @@ public class DataInit implements ApplicationRunner {
 
         if (count == 0) {
             User u1 = new User();
-
             u1.setNickname("Sofia");
             int numberOfMeetings1 = 17;
             u1.setNumberOfMeetings(numberOfMeetings1);
             //
             User u2 = new User();
-
             u2.setNickname("Sonya");
             int numberOfMeetings2 = 21;
             u2.setNumberOfMeetings(numberOfMeetings2);
-
 
             userDAO.save(u1);
             userDAO.save(u2);

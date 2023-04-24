@@ -1,15 +1,20 @@
 package com.example.project.controller;
 
+import com.example.project.UserNotFoundException;
 import com.example.project.dao.UserDAO;
 import com.example.project.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import static com.sun.tools.javac.util.List.from;
+import java.net.URI;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
+
 
 @RestController
+@RequestMapping("/")
 public class MainController {
 
     @Autowired
@@ -27,37 +32,48 @@ public class MainController {
         return sb.toString();
     }
 
-    @PostMapping(value="/createUser")
-    public void createUser(@RequestParam(name = "name", required = false, defaultValue = "defaultName") String nickname, User user) {
-        user.setNickname(nickname);
-        user.setNumberOfMeetings(0);
+
+    @PostMapping(value="/save-user")
+    public ResponseEntity<User> saveUser(@ModelAttribute("user") User user){
         userDAO.save(user);
+        return ResponseEntity.created(URI.create("/" + user.getId())).body(user);
     }
 
-    @PostMapping(value="/saveUser")
-    public String saveUser(@ModelAttribute("user") User u){
-        userDAO.save(u);
-        return ResponseEntity.ok(u);
-        //return "redirect:/viewUser";
+    @GetMapping(value="/user/{id}")
+    public ResponseEntity<Optional<User>> getUser(@PathVariable("id") UUID id){
+        try {
+            Optional<User> user = userDAO.findById(id);
+            return ResponseEntity.ok(user);
+        } catch (NoSuchElementException exception) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @GetMapping(value="/getUser/{id}")
-    public String getUser(Long id){
-        User u = userDAO.getUserById(id);
-        return "getUserForm";
+    @PutMapping(value="/edit-user/{id}")
+    public ResponseEntity<User> editUser(@PathVariable("id") UUID id,
+                                         @ModelAttribute("user") User updatedUser){
+        try {
+            userDAO.findById(id);
+        } catch (NoSuchElementException exception) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = userDAO.findById(id).orElseThrow(() -> new UserNotFoundException("User with ID: " + id + " is not found"));
+        user.setId(updatedUser.getId());
+        user.setNickname(updatedUser.getNickname());
+        user.setNumberOfMeetings(updatedUser.getNumberOfMeetings());
+        userDAO.save(user);
+        return ResponseEntity.ok(user);
     }
 
-    @PutMapping(value="/editUser/{id}")
-    public String editUser(@PathVariable Long id){
-        User user = userDAO.getUserById(id);
-        userDAO.update(user);
-        return "editUserForm";
-    }
-
-    @DeleteMapping(value="/deleteUser/{id}")
-    public String delete(@PathVariable Long id){
-        userDAO.deleteById(id);
-        return "redirect:/viewUser";
+    @DeleteMapping(value="/delete-user/{id}")
+    public ResponseEntity<User> delete(@PathVariable("id") UUID id){
+        try {
+            userDAO.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException exception) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

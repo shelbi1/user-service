@@ -5,29 +5,29 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+
+import java.util.UUID;
 
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue
-    @Column(name = "Id", nullable = false)
-    private Long id;
+    @Column(name = "id", nullable = false)
+    private UUID id;
 
-    @Column(name = "Nickname", length = 64, nullable = false)
+    @Column(name = "nickname", length = 64, nullable = false)
     private String nickname;
 
-    @Column(name = "Number_Of_Meetings", nullable = false)
-    private int numberOfMeetings;
+    @Column(name = "number_of_meetings", nullable = false)
+    private int numberOfMeetings = 0;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
